@@ -23,10 +23,14 @@ for f in files:
 combined = pd.concat(dfs, ignore_index=True)
 
 # Drop accidental repeated header rows (rare but possible)
-# combined = combined[combined["year"].astype(str).str.lower() != "year"]
+combined = combined[combined["Year"].astype(str).str.lower() != "Year"]
+
+
 
 combined.to_csv(OUT_PATH, index=False)
 print("Files:", len(files))
 print("Rows:", len(combined))
 print("Saved:", OUT_PATH)
+
+
 

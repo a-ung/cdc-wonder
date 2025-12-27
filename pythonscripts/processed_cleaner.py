@@ -4,19 +4,19 @@ import numpy as np
 IN_PATH = "data/processed/combined_raw.csv"
 OUT_PATH = "data/processed/clean_heart_disease_county_age_year_1999_2020.csv"
 
-# Load
+
 df = pd.read_csv(IN_PATH)
 df.columns = [c.strip() for c in df.columns]
 
 
-# --- Keep only true data rows (Year must be numeric) ---
+# --- Keep only true data rows (Year must be numeric) 
 df["Year_num"] = pd.to_numeric(df["Year"], errors="coerce")
 df = df[df["Year_num"].notna()].copy()
 df["Year"] = df["Year_num"].astype(int)
 df = df.drop(columns=["Year_num"])
 
 
-# --- Standardize/rename columns ---
+# --- Standardize/rename columns
 df = df.rename(columns={
     "State": "state",
     "State Code": "state_fips",
@@ -65,9 +65,6 @@ df["age_group_code"] = df["age_group_code"].astype(str).str.strip()
 df["year_code"] = df["year_code"].astype(str).str.strip()
 
 
-# --- Final schema (add cause label for your project)
-df["cause"] = "Diseases of the circulatory system (ICD-10 I00–I99)"  # update if you switch to heart disease subset
-
 
 out = df[[
     "state", "state_fips",
@@ -76,8 +73,7 @@ out = df[[
     "year", "year_code",
     "deaths", "population", "crude_rate",
     "suppressed",
-    "notes",
-    "cause"
+    "notes"
 ]].copy()
 
 
@@ -94,6 +90,7 @@ print("Deaths missing (includes suppressed):", int(out["deaths"].isna().sum()))
 # --- Warn if population missing
 if out["population"].isna().any():
     print("WARNING: Some population values are missing. Check raw exports.")
+
 
 
 out.to_csv(OUT_PATH, index=False)
